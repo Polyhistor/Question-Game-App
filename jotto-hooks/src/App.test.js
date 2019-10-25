@@ -74,7 +74,7 @@ describe("secretWord is null", () => {
     wrapper = setup(null);
   });
 
-  test("does not renders app when secretWord is null", () => {
+  test("does not render app when secretWord is null", () => {
     const appComponent = findByTestAttr(wrapper, "component-app");
     expect(appComponent.exists()).toBe(false);
   });
