@@ -26,6 +26,8 @@ const getStringByLanguage = (
 ) => {
   // if in strings object, the language code does not exist, or if the word in the language does not exist
   if (!strings[languageCode] || !strings[languageCode][stringKey]) {
+    console.warn(`Could no get string [${stringKey}] for [${languageCode}]`);
+
     return strings.en[stringKey];
   }
   return strings[languageCode][stringKey];

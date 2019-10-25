@@ -7,22 +7,38 @@ const strings = {
   mermish: {}
 };
 
-test("returns correct submit string for English", () => {
-  const string = getStringByLanguage("en", "submit", strings);
-  expect(string).toBe("submit");
-});
+describe("language string testing", () => {
+  const mockWarn = jest.fn();
 
-test("returns the correct submit string for emoji", () => {
-  const string = getStringByLanguage("emoji", "submit", strings);
-  expect(string).toBe("🚀");
-});
+  beforeEach(() => {
+    console.warn = mockWarn;
+  });
 
-test("return English submit string when language does not exist", () => {
-  const string = getStringByLanguage("notALanguage", "submit", strings);
-  expect(string).toBe("submit");
-});
+  afterEach(() => {
+    console.warn = require("console").warn;
+  });
 
-test("returns English submit string when submit key does not exist for language", () => {
-  const string = getStringByLanguage("mermish", "submit", strings);
-  expect(string).toBe("submit");
+  test("returns correct submit string for English", () => {
+    const string = getStringByLanguage("en", "submit", strings);
+    expect(string).toBe("submit");
+    expect(mockWarn).not.toHaveBeenCalled();
+  });
+
+  test("returns the correct submit string for emoji", () => {
+    const string = getStringByLanguage("emoji", "submit", strings);
+    expect(string).toBe("🚀");
+    expect(mockWarn).not.toHaveBeenCalled();
+  });
+
+  test("return English submit string when language does not exist", () => {
+    const string = getStringByLanguage("notALanguage", "submit", strings);
+    expect(string).toBe("submit");
+    expect(mockWarn).toHaveBeenCalled();
+  });
+
+  test("returns English submit string when submit key does not exist for language", () => {
+    const string = getStringByLanguage("mermish", "submit", strings);
+    expect(string).toBe("submit");
+    expect(mockWarn).toHaveBeenCalled();
+  });
 });
