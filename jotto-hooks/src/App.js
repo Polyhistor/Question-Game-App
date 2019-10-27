@@ -1,7 +1,10 @@
 import React from "react";
-import "./App.css";
-import hookAction from "./actions/hookAction";
 
+import "./App.css";
+
+import hookAction from "./actions/hookAction";
+import languageContext from "./contexts/languageContext";
+import LanguagePicker from "./LanguagePicker";
 import Input from "./input";
 
 /**
@@ -16,20 +19,27 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "setSecretWord":
       return { ...state, secretWord: action.payload };
+    case "setLanguage":
+      return { ...state, language: action.payload };
     default:
       throw new Error(`Invalid action type: ${action.type}`);
   }
 };
 
 // setting the initial state
-const initialState = { secretWord: null };
+const initialState = { secretWord: null, language: "en" };
 
-function App() {
+const App = () => {
+  // our reducer
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   // our dispatch
   const setSecretWord = secretWord =>
     dispatch({ type: "setSecretWord", payload: secretWord });
+
+  // our second dispatch
+  const setLanguage = language =>
+    dispatch({ type: "setLanguage", payload: language });
 
   // Running our function on mount
   React.useEffect(() => {
@@ -49,9 +59,13 @@ function App() {
 
   return (
     <div className="container" data-test="component-app">
-      <Input secretWord={state.secretWord}></Input>
+      <h1>Jotto</h1>
+      <languageContext.Provider value={state.language}>
+        <LanguagePicker setLanguage={setLanguage} />
+        <Input secretWord={state.secretWord}></Input>
+      </languageContext.Provider>
     </div>
   );
-}
+};
 
 export default App;

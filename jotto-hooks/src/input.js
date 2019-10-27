@@ -1,9 +1,14 @@
 import React from "react";
 import propTypes from "prop-types";
 
+import languageContext from "./contexts/languageContext";
+import stringsModule from "./helpers/strings";
+
 const Input = props => {
   // we do not destruct hooks because they break our tests yo!
   const [currentGuess, setCurrentGuess] = React.useState("");
+
+  const language = React.useContext(languageContext);
 
   return (
     <div data-test="component-input">
@@ -12,7 +17,10 @@ const Input = props => {
           data-test="input-box"
           className="mb-2 mx-sm-3"
           type="text"
-          placeholder="enter guess"
+          placeholder={stringsModule.getStringByLanguage(
+            language,
+            "guessInputPlaceholder"
+          )}
           onChange={e => setCurrentGuess(e.target.value)}
         ></input>
         <button
@@ -23,7 +31,7 @@ const Input = props => {
             setCurrentGuess("");
           }}
         >
-          Submit
+          {stringsModule.getStringByLanguage(language, "submit")}
         </button>
       </form>
     </div>

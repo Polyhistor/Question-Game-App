@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { mount } from "enzyme";
 import { findByTestAttr } from "../test/testUtils";
 import App from "./App";
@@ -18,16 +18,19 @@ const setup = (secretWord = "party") => {
   // overridin the function with our mock
   hookAction.getSecretWord = mockGetSecretWord;
 
-  const mockUseReducer = jest.fn().mockReturnValue([{ secretWord }, jest.fn()]);
+  const mockUseReducer = jest
+    .fn()
+    .mockReturnValue([{ secretWord, language: "en" }, jest.fn()]);
 
   React.useReducer = mockUseReducer;
 
-  // using mount because useEffect is not called on 'shallow'
+  // using mount because useEffect is not called on 'shallow
   return mount(<App />);
 };
 
 test("renders without crashing", () => {
   const wrapper = setup();
+
   const component = findByTestAttr(wrapper, "component-app");
   expect(component.length).toBe(1);
 });
