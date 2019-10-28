@@ -1,14 +1,23 @@
 import React from "react";
 import propTypes from "prop-types";
 
+import guessedWordsContext from "./contexts/guessedWordsContext";
+import successContext from "./contexts/successContext";
 import languageContext from "./contexts/languageContext";
 import stringsModule from "./helpers/strings";
+import { getLetterMatchCount } from "./helpers";
+import GuessedWords from "./GuessedWords";
 
-const Input = props => {
+const Input = ({ secretWord }) => {
   // we do not destruct hooks because they break our tests yo!
+  const language = React.useContext(languageContext);
+  const [success, setSuccess] = successContext.useSuccess();
+  const [guessedWords, setGuessedWords] = guessedWordsContext.useGuessedWords();
   const [currentGuess, setCurrentGuess] = React.useState("");
 
-  const language = React.useContext(languageContext);
+  if (success) {
+    return null;
+  }
 
   return (
     <div data-test="component-input">
@@ -28,6 +37,23 @@ const Input = props => {
           className="btn btn-primary mb-2"
           onClick={evt => {
             evt.preventDefault();
+
+            const letterMatchCount = getLetterMatchCount(
+              currentGuess,
+              secretWord
+            );
+
+            const newGuessedWords = [
+              ...guessedWords,
+              { guessedWord: currentGuess, letterMatchCount: letterMatchCount }
+            ];
+
+            setGuessedWords(newGuessedWords);
+
+            if (currentGuess === secretWord) {
+              setSuccess(true);
+            }
+
             setCurrentGuess("");
           }}
         >
@@ -36,10 +62,6 @@ const Input = props => {
       </form>
     </div>
   );
-};
-
-Input.propTypes = {
-  secretWord: propTypes.string.isRequired
 };
 
 export default Input;

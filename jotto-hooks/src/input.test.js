@@ -3,6 +3,8 @@ import { mount } from "enzyme";
 import { findByTestAttr, checkProps } from "../test/testUtils";
 import Input from "./input";
 import languageContext from "./contexts/languageContext";
+import successContext from "./contexts/successContext";
+import guessedWordsContext from "./contexts/guessedWordsContext";
 
 /**
  * function that creates an enzyme shallow dom with input component
@@ -11,13 +13,18 @@ import languageContext from "./contexts/languageContext";
  * @returns {ShallowWrapper}
  */
 
-const setup = ({ language, secretWord }) => {
+const setup = ({ language, secretWord, success }) => {
   language = language || "en";
   secretWord = secretWord || "party";
+  success = success || false;
 
   return mount(
     <languageContext.Provider value={language}>
-      <Input secretWord={secretWord} />
+      <successContext.SuccesProvider value={[success, jest.fn()]}>
+        <guessedWordsContext.GuesseedWordProvider>
+          <Input secretWord={secretWord} />
+        </guessedWordsContext.GuesseedWordProvider>
+      </successContext.SuccesProvider>
     </languageContext.Provider>
   );
 };
@@ -74,4 +81,9 @@ describe("languagePicker", () => {
     const submitButton = findByTestAttr(wrapper, "submit-button");
     expect(submitButton.text()).toBe("🚀");
   });
+});
+
+test("input component is empty when success is true", () => {
+  const wrapper = setup({ secretWord: "party", success: true });
+  expect(wrapper.isEmptyRender()).toBe(true);
 });
