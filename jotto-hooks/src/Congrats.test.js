@@ -4,6 +4,7 @@ import { mount } from "enzyme";
 import { findByTestAttr } from "../test/testUtils";
 import Congrats from "./Congrats";
 import languageContext from "./contexts/languageContext";
+import successContext from "./contexts/successContext";
 
 /**
  * Factory function to create a ReactWrapper for the Congrats component.
@@ -17,7 +18,9 @@ const setup = ({ success, language }) => {
 
   return mount(
     <languageContext.Provider value={language}>
-      <Congrats success={success} />
+      <successContext.SuccesProvider value={[success, jest.fn()]}>
+        <Congrats success={success} />
+      </successContext.SuccesProvider>
     </languageContext.Provider>
   );
 };

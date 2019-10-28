@@ -4,8 +4,14 @@ import "./App.css";
 
 import hookAction from "./actions/hookAction";
 import languageContext from "./contexts/languageContext";
+import successContext from "./contexts/successContext";
+import guessWordsContext from "./contexts/guessedWordsContext";
+
 import LanguagePicker from "./LanguagePicker";
 import Input from "./input";
+import Congrats from "./Congrats";
+import GuessedWords from "./GuessedWords";
+import guessedWordsContext from "./contexts/guessedWordsContext";
 
 /**
  * Reducer from react to update the state, called automatically by dispatch
@@ -62,7 +68,13 @@ const App = () => {
       <h1>Jotto</h1>
       <languageContext.Provider value={state.language}>
         <LanguagePicker setLanguage={setLanguage} />
-        <Input secretWord={state.secretWord}></Input>
+        <guessedWordsContext.GuesseedWordProvider>
+          <successContext.SuccesProvider>
+            <Congrats />
+            <Input secretWord={state.secretWord}></Input>
+          </successContext.SuccesProvider>
+          <GuessedWords />
+        </guessedWordsContext.GuesseedWordProvider>
       </languageContext.Provider>
     </div>
   );
